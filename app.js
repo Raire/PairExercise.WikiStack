@@ -1,20 +1,29 @@
-const morgan = require('morgan')
-const express = require('express')
-const bodyParser = require('body-parser')
-const layout = require('./views/layout.js')
+const morgan = require('morgan') //Get Morgan
+const express = require('express') //Get Express
+const bodyParser = require('body-parser') //Get Body Parser
+const layout = require('./views/layout.js') //Get Layout
 
-const app = express()
+const app = express()   //Express To App
 
-app.use(morgan('dev'));
-app.use(express.static(__dirname + '/public'));
-app.get(bodyParser.urlencoded({ extended: false }))
+const models = require('./models');
 
-app.get('/', (req, res) => {
+const init = async () => {
+    await models.db.sync({force: true});
+
+    app.listen(PORT, ()=> {
+        console.log(`Listening to ${PORT}`);
+    });
+}
+
+init();
+
+app.use(morgan('dev')); //Logger
+app.use(express.static(__dirname + '/public')); //Public Folder For Static
+app.get(bodyParser.urlencoded({ extended: false })) //For Input Parsing
+
+app.get('/', (req, res) => { //Main Page
     res.send(layout(''));
 })
 
-const PORT = 3000;
+const PORT = 3000; //Calls Port
 
-app.listen(PORT, () => {
-    console.log(`App listening in port ${PORT}`);
-});
