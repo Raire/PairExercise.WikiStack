@@ -21,7 +21,9 @@ app.use(morgan('dev')); //Logger
 app.use(express.static(__dirname + '/public')); //Public Folder For Static
 app.get(bodyParser.urlencoded({ extended: false })) //For Input Parsing
 
-
+app.get('/', (req, res) => {
+    res.redirect('/wiki');
+})
 app.use('/wiki', wikiRouter);
 app.use('/user', userRouter);
 
